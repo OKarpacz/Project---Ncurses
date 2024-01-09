@@ -3,8 +3,6 @@
 #define XMAX 33
 #define YMAX 18
 
-
-// NAPRAW FUNCKJE KTÓRA WSTAWIA CHIP JESLI DOSZŁO DO REMISU
 static const char chip_X[] = {1, 1, 1, 0, 0, 1, 1, 1,
                               0, 0, 1, 1, 1, 1, 0, 0,
                               0, 0, 0, 1, 1, 0, 0, 0,
