@@ -319,7 +319,7 @@ class Game : public Map {
 								mvprintw(23, (80 - 56) / 2, "YOU HAVE ALREADY PLACED ALL YOUR CHIPS ON THE BOARD. MOVE YOUR CHIP");
 								break;
 							case 5:
-								mvprintw(23, (80 - 47) / 2, "SOMETHING WENT WRONG :(");
+								mvprintw(23, (80 - 47) / 2, "YOU CAN'T PLACE A CHIP ON A PREVIOUS FIELD :(");
 								break;
 						}
 						break;
