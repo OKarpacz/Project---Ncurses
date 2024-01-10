@@ -380,7 +380,7 @@ int main () {
 			mvprintw(12, (80 - 29) / 2, "WANNA PLAY AGAIN? (y/n)");
 			attroff(COLOR_PAIR(4));
 
-			while (key != 'n' && key != 'y') {
+			while (key != 'n' && key != 'y') { /// Dopisz zeby tez szukało z capslockiem bo zapomniales !!!!!
 				key = getch();
 				if (key == 'n')
 					exit = 1;
