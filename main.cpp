@@ -1,4 +1,4 @@
-#include <iostream>
+
 #include <ncursesw/curses.h>
 #define XMAX 33
 #define YMAX 18
