@@ -1,4 +1,6 @@
-
+//REFAKTOR KODU 
+//DODANIE DODATKOWEJ FUNKCJI 
+//DOADANIE MYSZKI
 #include <ncursesw/curses.h>
 #define XMAX 33
 #define YMAX 18
