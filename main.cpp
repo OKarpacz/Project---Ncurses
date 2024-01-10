@@ -16,7 +16,7 @@ static const char chip_O[] = {0, 0, 1, 1, 1, 1, 0, 0,
                               1, 1, 1, 0, 0, 1, 1, 1,
                               0, 0, 1, 1, 1, 1, 0, 0
                              };
-
+//Zrob cos z tym boardem bo wyglada jak shit *<*
 struct board {
 	int x;
 	int y;
