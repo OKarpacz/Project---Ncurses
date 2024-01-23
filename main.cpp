@@ -1,6 +1,7 @@
-//REFAKTOR KODU 
-//DODANIE DODATKOWEJ FUNKCJI 
-//DOADANIE MYSZKI
+
+//Dopisz header ? 
+//Sprobuj jeszcze raz dodac myszkę
+#include <iostream>
 #include <ncursesw/curses.h>
 #define XMAX 33
 #define YMAX 18
@@ -18,20 +19,21 @@ static const char chip_O[] = {0, 0, 1, 1, 1, 1, 0, 0,
                               1, 1, 1, 0, 0, 1, 1, 1,
                               0, 0, 1, 1, 1, 1, 0, 0
                              };
-//Zrob cos z tym boardem bo wyglada jak shit *<*
-struct board {
-	int x;
-	int y;
-	int previousChip[2];
-	int chipsInPlay[2];
-	char chips[3][3];
-	int player;
-	int movements;
-	int move;
+
+class Board {
+	public:
+		int x;
+		int y;
+		int previousChip[2];
+		int chipsInPlay[2];
+		char chips[3][3];
+		int player;
+		int movements;
+		int move;
 };
 class Map {
 	public:
-		void draw_chip(int *dest, char type, board *Tboard) {
+		void draw_chip(int *dest, char type, Board *Tboard) {
 			int y,x;
 
 			for (int i = 0; i < 5; i++)     // Chip wysokosc
@@ -51,7 +53,7 @@ class Map {
 					}
 				}
 		}
-		void render_chip(board *Tboard) {
+		void render_chip(Board *Tboard) {
 
 			for(int i=0; i<=YMAX; i++)
 				for(int j=0; j<=XMAX; j++) {
@@ -90,13 +92,13 @@ class Map {
 };
 class Game : public Map {
 	public:
-		void clean_chips(board *Tboard) {
+		void clean_chips(Board *Tboard) {
 			for (int i = 0; i < 3; i++)
 				for (int j = 0; j < 3; j++)
 					Tboard->chips[i][j] = 0;
 		}
 
-		int place_chip(int *dest, board *Tboard) {
+		int place_chip(int *dest, Board *Tboard) {
 			if (Tboard->chips[dest[0]][dest[1]] != 0) {  // If cell jest zajety przez jakis chip
 
 				// jesli player postawił juz wszystkie chipy i chce je ruszyc
@@ -156,7 +158,7 @@ class Game : public Map {
 		}
 
 
-		void place_cursor(int *orig, int *dest, board *Tboard) {
+		void place_cursor(int *orig, int *dest, Board *Tboard) {
 			int y, x;
 
 			for (int i = 0; i < 5; i++) {
@@ -178,7 +180,7 @@ class Game : public Map {
 				attroff(COLOR_PAIR(3) | A_BLINK);
 			}
 		}
-		int check_winner(board *Tboard) {
+		int check_winner(Board *Tboard) {
 			int temp;
 
 			// Góra-Lewy do Dół-Prawy.
@@ -247,14 +249,14 @@ class Game : public Map {
 
 			return 0; // Nie ma wygranego
 		}
-		void print_game_messages(board *Tboard) {
+		void print_game_messages(Board *Tboard) {
 			mvprintw(5, 4, "      PLAYER");
 			mvprintw(6, 10, "%d TURN", Tboard->player);
 
 			mvprintw(5, 63, "NUMBER OF");
 			mvprintw(6, 61, "  MOVES: %d", Tboard->movements);
 		}
-		int main_game(board *Tboard) {
+		int main_game(Board *Tboard) {
 			int key = 0;
 			int winner = 0;
 			int check_move = 0;
@@ -321,7 +323,7 @@ class Game : public Map {
 								mvprintw(23, (80 - 56) / 2, "YOU HAVE ALREADY PLACED ALL YOUR CHIPS ON THE BOARD. MOVE YOUR CHIP");
 								break;
 							case 5:
-								mvprintw(23, (80 - 47) / 2, "YOU CAN'T PLACE A CHIP ON A PREVIOUS FIELD :(");
+								mvprintw(23, (80 - 47) / 2, "SOMETHING WENT WRONG :(");
 								break;
 						}
 						break;
@@ -331,49 +333,66 @@ class Game : public Map {
 			return winner;
 		}
 };
-int main () {
-	int key;
-	int exit = 0;
-	int winner;
-	board Tboard;
+class Setup {
+	public:
+		Setup() : exit(false), winner(0) {
+			initscr();
+			start_color();
+			noecho();
+			cbreak();
+			curs_set(FALSE);
+			keypad(stdscr, TRUE);
 
-	Tboard.x = (80 - XMAX) / 2;
-	Tboard.y = 3;
+			init_pair(0, COLOR_WHITE, COLOR_BLACK);
+			init_pair(1, COLOR_GREEN, COLOR_BLACK);
+			init_pair(2, COLOR_RED, COLOR_BLACK);
+			init_pair(3, COLOR_BLUE, COLOR_BLACK);
+			init_pair(4, COLOR_BLACK, COLOR_CYAN);
+		}
 
-	initscr();
-	start_color();
-	noecho();
-	cbreak();
-	curs_set(FALSE);
-	keypad(stdscr, TRUE);
+		~Setup() {
+			resetty();
+			endwin();
+		}
 
-	// WDRAŻANIE KOLORÓW I INNE TAKIE TAKIE
+		void run() {
+			while (!exit) {
+				key = 0;
+				winner = 0;
 
-	init_pair(0, COLOR_WHITE, COLOR_BLACK);
-	init_pair(1, COLOR_GREEN, COLOR_BLACK);
-	init_pair(2, COLOR_RED, COLOR_BLACK);
-	init_pair(3, COLOR_BLUE, COLOR_BLACK);
-	init_pair(4, COLOR_BLACK, COLOR_CYAN);
+				board.x = (80 - XMAX) / 2;
+				board.y = 3;
+				board.player = 1;
+				board.previousChip[0] = 3;
+				board.previousChip[1] = 3;
+				board.chipsInPlay[0] = 0;
+				board.chipsInPlay[1] = 0;
+				board.movements = 0;
 
-	while (!exit) {
-		key = 0;
-		winner = 0;
-		Tboard.player = 1;
-		Tboard.previousChip[0] = 3;
-		Tboard.previousChip[1] = 3;
-		Tboard.chipsInPlay[0] = 0;
-		Tboard.chipsInPlay[1] = 0;
-		Tboard.movements = 0;
+				clear();
+				mvprintw(1, (80 - 9) / 2, "");
 
-		clear();
-		mvprintw(1, (80 - 9) / 2, "");
+				Game game;
+				game.clean_chips(&board);
+				game.render_chip(&board);
+				winner = game.main_game(&board);
 
-		Game game;
-		game.clean_chips(&Tboard);
-		game.render_chip(&Tboard);
-		winner = game.main_game(&Tboard);
+				if (winner != 0) {
+					displayWinnerMessage();
+					handlePlayAgain();
+				} else {
+					exit = true;
+				}
+			}
+		}
 
-		if (winner != 0) {
+	private:
+		int key;
+		bool exit;
+		int winner;
+		Board board;
+
+		void displayWinnerMessage() {
 			attron(COLOR_PAIR(4));
 			mvprintw(10, (80 - 21) / 2, "CONGRATULATIONS PLAYER %d", winner);
 			attron(A_BLINK);
@@ -381,19 +400,19 @@ int main () {
 			attroff(A_BLINK);
 			mvprintw(12, (80 - 29) / 2, "WANNA PLAY AGAIN? (y/n)");
 			attroff(COLOR_PAIR(4));
+		}
 
-			while (key != 'n' && key != 'y') { /// Dopisz zeby tez szukało z capslockiem bo zapomniales !!!!!
+		void handlePlayAgain() {
+			while (key != 'n' && key != 'y') {
 				key = getch();
 				if (key == 'n')
-					exit = 1;
+					exit = true;
 			}
-		} else {
-			exit = 1;
 		}
-	}
+};
 
-	resetty();
-	endwin();
-
+int main() {
+	Setup runner;
+	runner.run();
 	return 0;
 }
