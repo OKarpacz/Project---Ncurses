@@ -1,10 +1,9 @@
 
-//Dopisz header ? 
-//Sprobuj jeszcze raz dodac myszkę
 #include <iostream>
 #include <ncursesw/curses.h>
 #define XMAX 33
 #define YMAX 18
+
 
 static const char chip_X[] = {1, 1, 1, 0, 0, 1, 1, 1,
                               0, 0, 1, 1, 1, 1, 0, 0,
@@ -323,7 +322,7 @@ class Game : public Map {
 								mvprintw(23, (80 - 56) / 2, "YOU HAVE ALREADY PLACED ALL YOUR CHIPS ON THE BOARD. MOVE YOUR CHIP");
 								break;
 							case 5:
-								mvprintw(23, (80 - 47) / 2, "SOMETHING WENT WRONG :(");
+								mvprintw(23, (80 - 22) / 2, "YOU CAN'T PUT IT HERE :(");
 								break;
 						}
 						break;
